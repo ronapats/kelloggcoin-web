@@ -3,15 +3,58 @@
 <!-- Step 1: List all transactions, starting with the ICO -->
 <ol>
     <%for transaction in transactions%>
-        <%if transaction["from_user_id"]= nil%>
-        <li>Initial coin offering:<%= transaction["amount"]%> to <%= transaction["to_user_id"]%></li>
+        <%from_user = User.find_by({"id" => transaction["from_user_id"]})%>
+        <%to_user = User.find_by({"id" => transaction["to_user_id"]})%>
+        <%if transaction["from_user_id"]!= nil%>
+        <li><%= transaction["amount"]%> KC from <%= from_user["name"]%> to <%= to_user["name"]%></li>
         <%else%>
-        <li><%= transaction["amount"]%> KC from <%= transaction["from_user_id"]%> to <%= transaction["from_user_id"]%></li>
+        <li>Initial coin offering:<%= transaction["amount"]%> to <%= to_user["name"]%></li>
         <%end%>
     <%end%>
 </ol>
 
 <!-- Step 2: Calculate and display the balances -->
+<%
+bens_balance = 0
+brians_balance = 0
+evans_balance = 0
+anthonys_balance = 0
+krystinas_balance = 0
+
+for transaction in transactions
+    from_user = User.find_by({"id" => transaction["from_user_id"]})
+    to_user = User.find_by({"id" => transaction["to_user_id"]})
+  if from_user && from_user["name"] == "Ben"
+    bens_balance = bens_balance - transaction["amount"]
+  elsif from_user && from_user["name"] == "Brian"
+    brians_balance = brians_balance - transaction["amount"]
+  elsif from_user && from_user["name"] == "Evan"
+    evans_balance = evans_balance - transaction["amount"]
+  elsif from_user && from_user["name"] == "Anthony"
+    anthonys_balance = anthonys_balance - transaction["amount"]
+  elsif from_user && from_user["name"] == "Krystina"
+    krystinas_balance = krystinas_balance - transaction["amount"]
+  end
+
+  if to_user["name"] == "Ben"
+    bens_balance = bens_balance + transaction["amount"]
+  elsif to_user["name"] == "Brian"
+    brians_balance = brians_balance + transaction["amount"]
+  elsif to_user["name"] == "Evan"
+    evans_balance = evans_balance + transaction["amount"]
+  elsif to_user["name"] == "Anthony"
+    anthonys_balance = anthonys_balance + transaction["amount"]
+  elsif to_user["name"] == "Krystina"
+    krystinas_balance = krystinas_balance + transaction["amount"]
+  end
+end
+%>
+
+<li> Balance for Brian: <%= brians_balance%> KC </li>
+<li> Balance for Ben: <%= bens_balance%> KC </li>
+<li> Balance for Evan: <%= evans_balance%> KC </li>
+<li> Balance for Anthony: <%= anthonys_balance%> KC </li>
+<li> Balance for Krystina: <%= krystinas_balance%> KC </li>
 
 <!-- 
 Expected balances:
